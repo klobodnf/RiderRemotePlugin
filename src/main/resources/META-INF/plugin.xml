@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.kjxx.riderremote</id>
     <name>Rider Remote</name>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
     <vendor>KJXX GAME</vendor>
 
     <description><![CDATA[
@@ -10,6 +10,10 @@
     ]]></description>
 
     <change-notes><![CDATA[
+        v1.0.5:
+        - StopHandler now triggers Rider Stop action via ActionManager (Ctrl+F2)
+        - All actions (Build, Run, Debug, Stop) now execute on EDT for proper IDE integration
+
         v1.0.4:
         - RunHandler now triggers Rider internal Debug/Run actions via ActionManager
         - Debug mode (Shift+F9) now properly executes on EDT

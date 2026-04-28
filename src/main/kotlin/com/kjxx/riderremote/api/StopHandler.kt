@@ -1,5 +1,7 @@
 package com.kjxx.riderremote.api
 
+import com.intellij.openapi.actionSystem.ActionManager
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
 import io.ktor.server.application.ApplicationCall
@@ -19,14 +21,27 @@ object StopHandler {
         logger.info("Stop requested for project: ${project.name}")
 
         try {
-            // Note: Stopping a running process is complex in IntelliJ
-            // For now, we just return a message
-            call.respond(
-                StopResponse(
-                    status = "stopped",
-                    message = "Stop signal sent (implementation depends on run configuration type)"
+            val actionManager = ActionManager.getInstance()
+            val action = actionManager.getAction("Stop")
+
+            if (action != null) {
+                ApplicationManager.getApplication().invokeLater {
+                    actionManager.tryToExecute(action, null, null, null, false)
+                }
+                call.respond(
+                    StopResponse(
+                        status = "stopped",
+                        message = "Triggered Rider Stop action (Ctrl+F2)"
+                    )
                 )
-            )
+            } else {
+                call.respond(
+                    StopResponse(
+                        status = "error",
+                        message = "Stop action not found"
+                    )
+                )
+            }
         } catch (e: Exception) {
             logger.error("Stop failed", e)
             call.respond(
