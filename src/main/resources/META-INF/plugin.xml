@@ -1,0 +1,51 @@
+<idea-plugin>
+    <id>com.kjxx.riderremote</id>
+    <name>Rider Remote</name>
+    <version>1.0.4</version>
+    <vendor>KJXX GAME</vendor>
+
+    <description><![CDATA[
+        Exposes a REST API for external tools to control Rider.
+        Supports build, run, diagnostics, and status queries.
+    ]]></description>
+
+    <change-notes><![CDATA[
+        v1.0.4:
+        - RunHandler now triggers Rider internal Debug/Run actions via ActionManager
+        - Debug mode (Shift+F9) now properly executes on EDT
+
+        v1.0.3:
+        - Extended build action detection list: Cpp.BuildProject, CMake.BuildProject, BuildProject, BuildMenu
+        - User-specified target action ID is now checked first
+
+        v1.0.2:
+        - Fixed threading issue: build action now executes on EDT via invokeLater
+        - Build API auto-detects available build actions (Build, CompileProject, MakeProject, etc.)
+
+        v1.0.1:
+        - Build API now triggers Rider internal build action (shows progress in IDE)
+        - Removed hardcoded project paths, plugin is now universal for any UE5 project
+        - Fixed Ktor/CIO server type compatibility
+
+        v1.0.0:
+        - Initial release with REST API for build/run/diagnostics.
+    ]]></change-notes>
+
+    <idea-version since-build="252"/>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.rider</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <postStartupActivity implementation="com.kjxx.riderremote.RemotePlugin"/>
+    </extensions>
+
+    <actions>
+        <action id="RiderRemote.ToggleServer"
+                class="com.kjxx.riderremote.actions.ToggleServerAction"
+                text="Toggle Remote Server"
+                description="Start or stop the remote HTTP server">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </action>
+    </actions>
+</idea-plugin>
